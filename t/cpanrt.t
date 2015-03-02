@@ -1,7 +1,7 @@
 use Date::Format qw(time2str strftime);
 use Date::Parse qw(strptime str2time);
 
-print "1..8\n";
+print "1..9\n";
 
 my $i = 1;
 
@@ -51,5 +51,16 @@ my $i = 1;
 
 {   # [rt.cpan.org #51664]  Change in str2time behaviour between 1.16 and 1.19
   print "not " if str2time('16 Oct 09') < 0;
+  print "ok ", $i++, "\n";
+}
+
+{   # RT#92611: str2time wrong date when no year specified
+  my @abbr = qw(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec);
+  my ($this_month,$this_year) = (gmtime(time))[4,5];
+  my $next_month = ($this_month + 1) % 12;
+  $Date::Parse::AlwaysGuessThisYear = 1;
+  my $time = str2time("1 $abbr[$next_month]");
+  my $year = (gmtime($time))[5];
+  print "not " unless $year == $this_year;
   print "ok ", $i++, "\n";
 }

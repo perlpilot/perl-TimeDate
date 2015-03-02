@@ -50,6 +50,8 @@ my %day = (
 my @suf = (qw(th st nd rd th th th th th th)) x 3;
 @suf[11,12,13] = qw(th th th);
 
+our $AlwaysGuessThisYear = 0;
+
 #Abbreviations
 
 map { $month{substr($_,0,3)} = $month{$_} } keys %month;
@@ -249,8 +251,10 @@ sub str2time
  $day  = $lt[3]
 	unless(defined $day);
 
- $year = ($month > $lt[4]) ? ($lt[5] - 1) : $lt[5]
-	unless(defined $year);
+ unless (defined $year) {
+    $year = $lt[5];
+    $year-- if !$AlwaysGuessThisYear && $month > $lt[4];
+ }
 
  return undef
 	unless($month <= 11 && $day >= 1 && $day <= 31

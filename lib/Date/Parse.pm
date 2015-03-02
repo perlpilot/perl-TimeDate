@@ -350,6 +350,14 @@ Below is a sample list of dates that are known to be parsable with Date::Parse
  1999 10:02:18 "GMT"
  16 Nov 94 22:28:20 PST 
 
+For dates of the form "01 Feb" (where the year is not specified),
+C<Date::Parse::str2time> must guess which year is meant. If the month is
+the current month or a month prior to the current month, C<str2time>
+will guess the current year. If the month is a future month, then
+C<str2time> guesses the previous year.  This behavior can be changed
+such that C<str2time> will always guess the current year by setting
+C<$Date::Parse::AlwaysGuessThisYear> to a true value.
+
 =head1 LIMITATION
 
 Date::Parse uses L<Time::Local> internally, so is limited to only parsing dates
